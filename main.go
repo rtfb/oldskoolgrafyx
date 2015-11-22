@@ -2,9 +2,17 @@ package main
 
 import (
 	"fmt"
-	"github.com/veandco/go-sdl2/sdl"
 	"os"
+
+	"github.com/ungerik/go3d"
+	"github.com/veandco/go-sdl2/sdl"
 )
+
+type Camera struct {
+	Pos  go3d.vec3
+	View go3d.vec3
+	FOV  float
+}
 
 var winTitle string = "Go-SDL2 Events"
 var winWidth, winHeight int = 800, 600
@@ -15,7 +23,12 @@ func run() int {
 	var event sdl.Event
 	var running bool
 	var err error
-
+	cam := Camera{
+		Pos:  vec3.Zero,
+		View: vec3.UnitX,
+		FOV:  120,
+	}
+	fmt.Printf("cam: %v\n", cam)
 	window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		winWidth, winHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
