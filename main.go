@@ -77,7 +77,7 @@ func run() int {
 			case *sdl.KeyUpEvent:
 				fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tmodifiers:%d\tstate:%d\trepeat:%d\n",
 					t.Timestamp, t.Type, t.Keysym.Sym, t.Keysym.Mod, t.State, t.Repeat)
-				if t.Keysym.Sym == 27 {
+				if t.Keysym.Sym == 27 || t.Keysym.Sym == 1073741881 /* Caps Lock */ {
 					running = false
 				}
 			}
