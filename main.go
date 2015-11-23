@@ -23,6 +23,7 @@ func run() int {
 	var event sdl.Event
 	var running bool
 	var err error
+	var angle float32
 	cam := Camera{
 		Pos:  vec3.Zero,
 		View: vec3.UnitX,
@@ -59,6 +60,20 @@ func run() int {
 			case *sdl.MouseWheelEvent:
 				fmt.Printf("[%d ms] MouseWheel\ttype:%d\tid:%d\tx:%d\ty:%d\n",
 					t.Timestamp, t.Type, t.Which, t.X, t.Y)
+			case *sdl.KeyDownEvent:
+				if t.Keysym.Sym == 1073741904 { // left arrow
+					angle -= 1.0
+				}
+				if t.Keysym.Sym == 1073741903 { // right arrow
+					angle += 1.0
+				}
+				if angle < 0 {
+					angle = 360
+				}
+				if angle > 360 {
+					angle = 0
+				}
+				fmt.Printf("angle = %f\n", angle)
 			case *sdl.KeyUpEvent:
 				fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tmodifiers:%d\tstate:%d\trepeat:%d\n",
 					t.Timestamp, t.Type, t.Keysym.Sym, t.Keysym.Mod, t.State, t.Repeat)
@@ -67,6 +82,7 @@ func run() int {
 				}
 			}
 		}
+		render(renderer, angle)
 	}
 
 	return 0
