@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ungerik/go3d"
+	"github.com/ungerik/go3d/vec3"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 type Camera struct {
-	Pos  go3d.vec3
-	View go3d.vec3
-	FOV  float
+	Pos  vec3.T
+	View vec3.T
+	FOV  float32
 }
 
 var winTitle string = "Go-SDL2 Events"
