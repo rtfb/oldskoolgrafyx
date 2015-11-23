@@ -44,6 +44,7 @@ func run() int {
 		return 2
 	}
 	defer renderer.Destroy()
+	r := &R{renderer}
 
 	running = true
 	for running {
@@ -82,7 +83,7 @@ func run() int {
 				}
 			}
 		}
-		render(renderer, angle)
+		r.doFrame(angle)
 	}
 
 	return 0
