@@ -17,6 +17,11 @@ type Camera struct {
 var winTitle string = "Go-SDL2 Events"
 var winWidth, winHeight int = 800, 600
 var angle float32
+var cam = &Camera{
+	Pos:  vec3.Zero,
+	View: vec3.UnitX,
+	FOV:  120,
+}
 
 func mainLoop(renderer *sdl.Renderer) {
 	r := &R{renderer}
@@ -36,11 +41,9 @@ func run() int {
 	var window *sdl.Window
 	var renderer *sdl.Renderer
 	var err error
-	cam := Camera{
-		Pos:  vec3.Zero,
-		View: vec3.UnitX,
-		FOV:  120,
-	}
+	cam.Pos[0] = float32(winWidth / 2)
+	cam.Pos[1] = float32(winHeight / 2)
+	cam.View[0] = 100
 	fmt.Printf("cam: %v\n", cam)
 	window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		winWidth, winHeight, sdl.WINDOW_SHOWN)

@@ -1,8 +1,7 @@
 package main
 
 import (
-	"math"
-
+	"github.com/ungerik/go3d/mat3"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -18,15 +17,15 @@ func (r *R) drawAxes() {
 }
 
 func (r *R) drawRadarBeam(angle float32) {
-	rangle := float64(angle) * 3.14 / 180.0
-	// cos(0) = 1
-	// sin(0) = 0
-	// cx + cos(angle)*100
-	// cy + sin(angle)*100
+	rangle := angle * 3.14 / 180.0
+	m := mat3.Ident
+	m.AssignZRotation(rangle)
+	view := cam.View
+	m.TransformVec3(&view)
+	pos2 := cam.Pos
+	pos2.Add(&view)
 	r.sr.SetDrawColor(0, 255, 0, 255)
-	cx := winWidth / 2
-	cy := winHeight / 2
-	r.sr.DrawLine(cx, cy, cx+int(math.Cos(rangle)*100.0), cy+int(math.Sin(rangle)*100.0))
+	r.sr.DrawLine(int(cam.Pos[0]), int(cam.Pos[1]), int(pos2[0]), int(pos2[1]))
 }
 
 func (r *R) doFrame(angle float32) {
