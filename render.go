@@ -7,6 +7,7 @@ import (
 
 type R struct {
 	sr *sdl.Renderer
+	bb *sdl.Surface // backbuffer
 }
 
 func (r *R) drawAxes() {
@@ -31,6 +32,7 @@ func (r *R) drawRadarBeam(angle float32) {
 func (r *R) doFrame(angle float32) {
 	r.sr.SetDrawColor(0, 0, 0, 255)
 	r.sr.Clear()
+	r.bb.Pixels()[1] = 0xff
 	r.drawAxes()
 	r.drawRadarBeam(angle)
 	r.sr.Present()

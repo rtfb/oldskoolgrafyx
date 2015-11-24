@@ -23,8 +23,8 @@ var cam = &Camera{
 	FOV:  120,
 }
 
-func mainLoop(renderer *sdl.Renderer) {
-	r := &R{renderer}
+func mainLoop(renderer *sdl.Renderer, surface *sdl.Surface, window *sdl.Window) {
+	r := &R{renderer, surface}
 	quit := make(chan bool)
 	for {
 		select {
@@ -34,6 +34,8 @@ func mainLoop(renderer *sdl.Renderer) {
 			r.doFrame(angle)
 			processInput(quit)
 		}
+		window.UpdateSurface()
+		sdl.Delay(1) // yield CPU
 	}
 }
 
@@ -52,14 +54,17 @@ func run() int {
 		return 1
 	}
 	defer window.Destroy()
-
-	renderer, err = sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
+	surface, err := window.GetSurface()
+	if err != nil {
+		panic(err)
+	}
+	renderer, err = sdl.CreateSoftwareRenderer(surface)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to create renderer: %s\n", err)
 		return 2
 	}
 	defer renderer.Destroy()
-	mainLoop(renderer)
+	mainLoop(renderer, surface, window)
 	return 0
 }
 
