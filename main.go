@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/ungerik/go3d/vec3"
 	"github.com/veandco/go-sdl2/sdl"
@@ -24,12 +25,24 @@ var cam = &Camera{
 }
 
 func mainLoop(renderer *sdl.Renderer, surface *sdl.Surface, window *sdl.Window) {
-	r := &R{renderer, surface}
+	r := &R{
+		sr:      renderer,
+		bb:      surface,
+		nFrames: 0,
+		fps:     0,
+	}
 	quit := make(chan bool)
+	fpsTicker := time.NewTicker(1 * time.Second)
+	fpsQuit := make(chan struct{})
 	for {
 		select {
 		case <-quit:
+			close(fpsQuit)
 			return
+		case <-fpsTicker.C:
+			r.fps = r.nFrames
+			fmt.Printf("FPS: %d\n", r.fps)
+			r.nFrames = 0
 		default:
 			r.doFrame(angle)
 			processInput(quit)

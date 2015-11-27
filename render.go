@@ -6,8 +6,10 @@ import (
 )
 
 type R struct {
-	sr *sdl.Renderer
-	bb *sdl.Surface // backbuffer
+	sr      *sdl.Renderer
+	bb      *sdl.Surface // backbuffer
+	nFrames int          // current frame #, incremented after every frame
+	fps     int          // averaged FPS
 }
 
 func (r *R) drawAxes() {
@@ -36,4 +38,5 @@ func (r *R) doFrame(angle float32) {
 	r.drawAxes()
 	r.drawRadarBeam(angle)
 	r.sr.Present()
+	r.nFrames++
 }
