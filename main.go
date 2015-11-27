@@ -7,6 +7,7 @@ import (
 
 	"github.com/ungerik/go3d/vec3"
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/sdl_ttf"
 )
 
 type Camera struct {
@@ -25,11 +26,16 @@ var cam = &Camera{
 }
 
 func mainLoop(renderer *sdl.Renderer, surface *sdl.Surface, window *sdl.Window) {
+	font, err := ttf.OpenFont("fonts/sfd/FreeMono.ttf", 16)
+	if err != nil {
+		panic(err)
+	}
 	r := &R{
 		sr:      renderer,
 		bb:      surface,
 		nFrames: 0,
 		fps:     0,
+		font:    font,
 	}
 	quit := make(chan bool)
 	fpsTicker := time.NewTicker(1 * time.Second)
@@ -41,7 +47,6 @@ func mainLoop(renderer *sdl.Renderer, surface *sdl.Surface, window *sdl.Window) 
 			return
 		case <-fpsTicker.C:
 			r.fps = r.nFrames
-			fmt.Printf("FPS: %d\n", r.fps)
 			r.nFrames = 0
 		default:
 			r.doFrame(angle)
@@ -77,6 +82,10 @@ func run() int {
 		return 2
 	}
 	defer renderer.Destroy()
+	err = ttf.Init()
+	if err != nil {
+		panic(err)
+	}
 	mainLoop(renderer, surface, window)
 	return 0
 }
