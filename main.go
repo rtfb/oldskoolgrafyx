@@ -11,18 +11,18 @@ import (
 )
 
 type Camera struct {
-	Pos  vec3.T
-	View vec3.T
-	FOV  float32
+	Pos         vec3.T
+	Orientation vec3.T // yaw, pitch, roll, in radians. When Orientation is
+	// Zero, camera's view vector equals UnitX
+	FOV float32
 }
 
 var winTitle string = "Go-SDL2 Events"
 var winWidth, winHeight int = 800, 600
-var angle float32
 var cam = &Camera{
-	Pos:  vec3.Zero,
-	View: vec3.UnitX,
-	FOV:  120,
+	Pos:         vec3.Zero,
+	Orientation: vec3.Zero,
+	FOV:         120,
 }
 
 func mainLoop(renderer *sdl.Renderer, surface *sdl.Surface, window *sdl.Window) {
@@ -49,7 +49,7 @@ func mainLoop(renderer *sdl.Renderer, surface *sdl.Surface, window *sdl.Window) 
 			r.fps = r.nFrames
 			r.nFrames = 0
 		default:
-			r.doFrame(angle)
+			r.doFrame()
 			processInput(quit)
 		}
 		window.UpdateSurface()
@@ -63,7 +63,6 @@ func run() int {
 	var err error
 	cam.Pos[0] = float32(winWidth / 2)
 	cam.Pos[1] = float32(winHeight / 2)
-	cam.View[0] = 100
 	fmt.Printf("cam: %v\n", cam)
 	window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		winWidth, winHeight, sdl.WINDOW_SHOWN)

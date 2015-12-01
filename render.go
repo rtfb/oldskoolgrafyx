@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ungerik/go3d/mat3"
+	"github.com/ungerik/go3d/vec3"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_ttf"
 )
@@ -23,11 +24,11 @@ func (r *R) drawAxes() {
 	r.sr.DrawLine(10, 10, 10, 45) // red line along Y axis
 }
 
-func (r *R) drawRadarBeam(angle float32) {
-	rangle := angle * 3.14 / 180.0
+func (r *R) drawRadarBeam() {
 	m := mat3.Ident
-	m.AssignZRotation(rangle)
-	view := cam.View
+	m.AssignZRotation(cam.Orientation[0])
+	view := vec3.UnitX
+	view.Scale(100) // prescale view vector to take meaningful size on screen
 	m.TransformVec3(&view)
 	pos2 := cam.Pos
 	pos2.Add(&view)
@@ -50,12 +51,12 @@ func (r *R) drawFPS() {
 	}
 }
 
-func (r *R) doFrame(angle float32) {
+func (r *R) doFrame() {
 	r.sr.SetDrawColor(0, 0, 0, 255)
 	r.sr.Clear()
 	r.bb.Pixels()[1] = 0xff
 	r.drawAxes()
-	r.drawRadarBeam(angle)
+	r.drawRadarBeam()
 	r.drawFPS()
 	r.sr.Present()
 	r.nFrames++

@@ -2,8 +2,13 @@ package main
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/veandco/go-sdl2/sdl"
+)
+
+const (
+	oneDegree = math.Pi / 180.0
 )
 
 func processInput(quit chan bool) {
@@ -23,18 +28,18 @@ func processInput(quit chan bool) {
 				t.Timestamp, t.Type, t.Which, t.X, t.Y)
 		case *sdl.KeyDownEvent:
 			if t.Keysym.Sym == 1073741904 { // left arrow
-				angle -= 1.0
+				cam.Orientation[0] -= oneDegree
 			}
 			if t.Keysym.Sym == 1073741903 { // right arrow
-				angle += 1.0
+				cam.Orientation[0] += oneDegree
 			}
-			if angle < 0 {
-				angle = 360
+			if cam.Orientation[0] < 0 {
+				cam.Orientation[0] = 2 * math.Pi
 			}
-			if angle > 360 {
-				angle = 0
+			if cam.Orientation[0] > 2*math.Pi {
+				cam.Orientation[0] = 0
 			}
-			fmt.Printf("angle = %f\n", angle)
+			fmt.Printf("cam.Orientation[0] = %f\n", cam.Orientation[0])
 		case *sdl.KeyUpEvent:
 			fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tcode:%d\tmodifiers:%d\n",
 				t.Timestamp, t.Type, t.Keysym.Sym, t.Keysym.Sym, t.Keysym.Mod)
