@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/ungerik/go3d/vec3"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -40,6 +41,9 @@ func processInput(quit chan bool) {
 				cam.Orientation[0] = 0
 			}
 			fmt.Printf("cam.Orientation[0] = %f\n", cam.Orientation[0])
+			pt := vec3.T{10, 20, 3}
+			sp := perspProj(&pt, cam)
+			fmt.Printf("sp: %v\n", sp)
 		case *sdl.KeyUpEvent:
 			fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tcode:%d\tmodifiers:%d\n",
 				t.Timestamp, t.Type, t.Keysym.Sym, t.Keysym.Sym, t.Keysym.Mod)

@@ -14,6 +14,7 @@ type Camera struct {
 	Pos         vec3.T
 	Orientation vec3.T // yaw, pitch, roll, in radians. When Orientation is
 	// Zero, camera's view vector equals UnitX
+	Eye vec3.T // Eye position behind the screen plane
 	FOV float32
 }
 
@@ -22,6 +23,7 @@ var winWidth, winHeight int = 800, 600
 var cam = &Camera{
 	Pos:         vec3.Zero,
 	Orientation: vec3.Zero,
+	Eye:         vec3.Zero,
 	FOV:         120,
 }
 
@@ -61,8 +63,9 @@ func run() int {
 	var window *sdl.Window
 	var renderer *sdl.Renderer
 	var err error
-	cam.Pos[0] = float32(winWidth / 2)
-	cam.Pos[1] = float32(winHeight / 2)
+	cam.Eye[0] = float32(winWidth / 2)
+	cam.Eye[1] = float32(winHeight / 2)
+	cam.Eye[2] = float32(-1.0)
 	fmt.Printf("cam: %v\n", cam)
 	window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		winWidth, winHeight, sdl.WINDOW_SHOWN)
