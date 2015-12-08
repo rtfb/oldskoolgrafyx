@@ -31,8 +31,8 @@ func perspProj(a *vec3.T, cam *Camera) *vec2.T {
 	ry := mat3.Ident
 	rz := mat3.Ident
 	rx.AssignXRotation(-cam.Orientation[0])
-	ry.AssignXRotation(-cam.Orientation[1])
-	rz.AssignXRotation(-cam.Orientation[2])
+	ry.AssignYRotation(-cam.Orientation[1])
+	rz.AssignZRotation(-cam.Orientation[2])
 	point := vec3.From(a)
 	point.Sub(&cam.Pos)
 	fmt.Printf("point: %v\n", point)
