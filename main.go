@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/ungerik/go3d/vec2"
 	"github.com/ungerik/go3d/vec3"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_ttf"
@@ -14,17 +15,18 @@ type Camera struct {
 	Pos         vec3.T
 	Orientation vec3.T // yaw, pitch, roll, in radians. When Orientation is
 	// Zero, camera's view vector equals UnitX
-	Eye vec3.T // Eye position behind the screen plane
-	FOV float32
+	Eye      vec3.T // Eye position behind the screen plane
+	FOV      float32
+	Viewport vec2.T // Size of the virtual image plane
 }
 
 var winTitle string = "Go-SDL2 Events"
-var winWidth, winHeight int = 800, 600
 var cam = &Camera{
 	Pos:         vec3.Zero,
 	Orientation: vec3.Zero,
 	Eye:         vec3.Zero,
 	FOV:         120,
+	Viewport:    vec2.Zero,
 }
 
 func mainLoop(renderer *sdl.Renderer, surface *sdl.Surface, window *sdl.Window) {
@@ -63,12 +65,13 @@ func run() int {
 	var window *sdl.Window
 	var renderer *sdl.Renderer
 	var err error
-	cam.Eye[0] = float32(winWidth / 2)
-	cam.Eye[1] = float32(winHeight / 2)
+	cam.Viewport = vec2.T{800, 600}
+	cam.Eye[0] = cam.Viewport[0] / 2
+	cam.Eye[1] = cam.Viewport[1] / 2
 	cam.Eye[2] = float32(-1.0)
 	fmt.Printf("cam: %v\n", cam)
 	window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
-		winWidth, winHeight, sdl.WINDOW_SHOWN)
+		int(cam.Viewport[0]), int(cam.Viewport[1]), sdl.WINDOW_SHOWN)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to create window: %s\n", err)
 		return 1

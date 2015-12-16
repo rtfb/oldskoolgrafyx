@@ -68,7 +68,7 @@ func (r *R) drawFPS() {
 	}
 	var srcRect sdl.Rect
 	surf.GetClipRect(&srcRect)
-	dstRect := sdl.Rect{int32(winWidth) - srcRect.W - 20, 20, srcRect.W, srcRect.H}
+	dstRect := sdl.Rect{int32(cam.Viewport[0]) - srcRect.W - 20, 20, srcRect.W, srcRect.H}
 	err = surf.Blit(&srcRect, r.bb, &dstRect)
 	if err != nil {
 		panic(err)
