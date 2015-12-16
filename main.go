@@ -20,7 +20,6 @@ type Camera struct {
 	Viewport vec2.T // Size of the virtual image plane
 }
 
-var winTitle string = "Go-SDL2 Events"
 var cam = &Camera{
 	Pos:         vec3.Zero,
 	Orientation: vec3.Zero,
@@ -70,6 +69,7 @@ func run() int {
 	cam.Eye[1] = cam.Viewport[1] / 2
 	cam.Eye[2] = float32(-1.0)
 	fmt.Printf("cam: %v\n", cam)
+	const winTitle = "Go-SDL2 Events"
 	window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		int(cam.Viewport[0]), int(cam.Viewport[1]), sdl.WINDOW_SHOWN)
 	if err != nil {
