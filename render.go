@@ -4,8 +4,10 @@ import (
 	"fmt"
 
 	"github.com/ungerik/go3d/mat3"
+	"github.com/ungerik/go3d/mat4"
 	"github.com/ungerik/go3d/vec2"
 	"github.com/ungerik/go3d/vec3"
+	"github.com/ungerik/go3d/vec4"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_ttf"
 )
@@ -25,26 +27,38 @@ func (r *R) drawAxes() {
 	r.sr.DrawLine(10, 10, 10, 45) // red line along Y axis
 }
 
+func printM4(m *mat4.T) {
+	for i := 0; i < 4; i++ {
+		fmt.Printf("[%f %f %f %f]\n", m[0][i], m[1][i], m[2][i], m[3][i])
+	}
+}
+
+func printM3(m *mat3.T) {
+	for i := 0; i < 3; i++ {
+		fmt.Printf("[%f %f %f]\n", m[0][i], m[1][i], m[2][i])
+	}
+}
+
+func mkExtrinsicCameraMtx(cam *Camera) *mat4.T {
+	mRot := mat3.Ident
+	mRot.AssignEulerRotation(cam.Orientation[0], cam.Orientation[1], cam.Orientation[2])
+	mRot.Transpose()
+	printM3(&mRot)
+	m := mat4.From(&mRot)
+	mRot.Scale(-1)
+	camPos := vec3.From(&cam.Pos)
+	mRot.TransformVec3(&camPos)
+	m[3] = vec4.From(&camPos)
+	return &m
+}
+
 // Project 3D point 'a' from world-space to screen-space
 func perspProj(a *vec3.T, cam *Camera) *vec2.T {
-	rx := mat3.Ident
-	ry := mat3.Ident
-	rz := mat3.Ident
-	rx.AssignXRotation(-cam.Orientation[0])
-	ry.AssignYRotation(-cam.Orientation[1])
-	rz.AssignZRotation(-cam.Orientation[2])
-	point := vec3.From(a)
-	point.Sub(&cam.Pos)
-	fmt.Printf("point: %v\n", point)
-	temp := mat3.Ident
-	temp.AssignMul(&rx, &ry)
-	m := mat3.Ident
-	m.AssignMul(&temp, &rz)
-	m.TransformVec3(&point)
-	fmt.Printf("point: %v\n", point)
-	sx := cam.Eye[2]/point[2]*point[0] + cam.Eye[0]
-	sy := cam.Eye[2]/point[2]*point[1] + cam.Eye[1]
-	return &vec2.T{sx, sy}
+	m := mkExtrinsicCameraMtx(cam)
+	printM4(m)
+	sp := vec3.From(a)
+	m.TransformVec3(&sp)
+	return &vec2.T{sp[0], sp[1]}
 }
 
 func (r *R) drawRadarBeam() {
@@ -53,11 +67,11 @@ func (r *R) drawRadarBeam() {
 	view := vec3.UnitX
 	view.Scale(100) // prescale view vector to take meaningful size on screen
 	m.TransformVec3(&view)
-	pos2 := vec3.From(&cam.Eye)
+	pos2 := vec3.From(&cam.Pos)
 	pos2[2] = 0
 	pos2.Add(&view)
 	r.sr.SetDrawColor(0, 255, 0, 255)
-	r.sr.DrawLine(int(cam.Eye[0]), int(cam.Eye[1]), int(pos2[0]), int(pos2[1]))
+	r.sr.DrawLine(int(cam.Pos[0]), int(cam.Pos[1]), int(pos2[0]), int(pos2[1]))
 }
 
 func (r *R) drawFPS() {

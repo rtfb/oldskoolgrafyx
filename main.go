@@ -12,10 +12,9 @@ import (
 )
 
 type Camera struct {
-	Pos         vec3.T
+	Pos         vec3.T // Camera position (world coordinates)
 	Orientation vec3.T // yaw, pitch, roll, in radians. When Orientation is
 	// Zero, camera's view vector equals UnitX
-	Eye      vec3.T // Eye position behind the screen plane
 	FOV      float32
 	Viewport vec2.T // Size of the virtual image plane
 }
@@ -23,7 +22,6 @@ type Camera struct {
 var cam = &Camera{
 	Pos:         vec3.Zero,
 	Orientation: vec3.Zero,
-	Eye:         vec3.Zero,
 	FOV:         120,
 	Viewport:    vec2.Zero,
 }
@@ -65,9 +63,8 @@ func run() int {
 	var renderer *sdl.Renderer
 	var err error
 	cam.Viewport = vec2.T{800, 600}
-	cam.Eye[0] = cam.Viewport[0] / 2
-	cam.Eye[1] = cam.Viewport[1] / 2
-	cam.Eye[2] = float32(-1.0)
+	cam.Pos[0] = cam.Viewport[0] / 2
+	cam.Pos[1] = cam.Viewport[1] / 2
 	fmt.Printf("cam: %v\n", cam)
 	const winTitle = "Go-SDL2 Events"
 	window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
