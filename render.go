@@ -9,7 +9,7 @@ import (
 	"github.com/ungerik/go3d/vec3"
 	"github.com/ungerik/go3d/vec4"
 	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/sdl_ttf"
+	"github.com/veandco/go-sdl2/ttf"
 )
 
 type R struct {
@@ -71,12 +71,12 @@ func (r *R) drawRadarBeam() {
 	pos2[2] = 0
 	pos2.Add(&view)
 	r.sr.SetDrawColor(0, 255, 0, 255)
-	r.sr.DrawLine(int(cam.Pos[0]), int(cam.Pos[1]), int(pos2[0]), int(pos2[1]))
+	r.sr.DrawLine(int32(cam.Pos[0]), int32(cam.Pos[1]), int32(pos2[0]), int32(pos2[1]))
 }
 
 func (r *R) drawFPS() {
 	fps := fmt.Sprintf("FPS: %d", r.fps)
-	surf, err := r.font.RenderUTF8_Blended(fps, sdl.Color{0, 255, 0, 255})
+	surf, err := r.font.RenderUTF8Blended(fps, sdl.Color{0, 255, 0, 255})
 	if err != nil {
 		panic(err)
 	}

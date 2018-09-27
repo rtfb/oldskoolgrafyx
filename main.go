@@ -8,7 +8,7 @@ import (
 	"github.com/ungerik/go3d/vec2"
 	"github.com/ungerik/go3d/vec3"
 	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/sdl_ttf"
+	"github.com/veandco/go-sdl2/ttf"
 )
 
 type Camera struct {
@@ -68,7 +68,7 @@ func run() int {
 	fmt.Printf("cam: %v\n", cam)
 	const winTitle = "Go-SDL2 Events"
 	window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
-		int(cam.Viewport[0]), int(cam.Viewport[1]), sdl.WINDOW_SHOWN)
+		int32(cam.Viewport[0]), int32(cam.Viewport[1]), sdl.WINDOW_SHOWN)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to create window: %s\n", err)
 		return 1
